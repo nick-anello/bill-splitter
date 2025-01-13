@@ -3,16 +3,17 @@
  */
 
 //store page elements as variables
-const addButton = document.getElementById('add-person'),
+const addPersonButton = document.getElementById('add-person'),
     personName = document.getElementById('person-name'),
-    peopleList = document.getElementById('people-list');
+    peopleList = document.getElementById('people-list'),
+    addItemButton = document.getElementById('add-item');
 
 //define globals
 let people = [];
 
 //disable the Add button if input field is blank
 personName.addEventListener('input', () => {
-    addButton.disabled = !personName.value.trim();
+    addPersonButton.disabled = !personName.value.trim();
 });
 
 //handle Enter keypress in the personName input field
@@ -26,7 +27,7 @@ personName.addEventListener('keypress', (event) => {
 });
 
 //handle the Add People button
-addButton.addEventListener('click', () => { addPerson(); });
+addPersonButton.addEventListener('click', () => { addPerson(); });
 
 //handle the Delete buttons in the peopleList
 peopleList.addEventListener('click', (event) => {
@@ -38,18 +39,21 @@ peopleList.addEventListener('click', (event) => {
         //update people array
         updatePeople();        
     }
-  });
+});
+
+//handle the Add Item button
+addPersonButton.addEventListener('click', () => { addItem(); });
 
 /**
  * Prepend the people list with the new person
  */
 function addPerson() {
     //disable the add button
-    addButton.disabled = true;
+    addPersonButton.disabled = true;
     //prepend the people list
     peopleList.innerHTML = `
         <li class="list-group-item d-flex justify-content-between">
-            ${personName.value.trim()}
+            <span class="person-name">${personName.value.trim()}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
         + peopleList.innerHTML;
