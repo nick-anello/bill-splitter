@@ -6,12 +6,19 @@
 const addPersonButton = document.getElementById('add-person'),
     personName = document.getElementById('person-name'),
     peopleList = document.getElementById('people-list'),
-    addItemButton = document.getElementById('add-item');
+    addItemButton = document.getElementById('add-item'),
+    itemName = document.getElementById('item-name'),
+    itemCost = document.getElementById('item-cost'),
+    itemOwner = document.getElementById('item-owner'),
+    itemList = document.getElementById('item-list');
 
 //define globals
 let people = [];
 
-//disable the Add button if input field is blank
+//handle the Add People button
+addPersonButton.addEventListener('click', () => { addPerson(); });
+
+//disable the Add People button if input field is blank
 personName.addEventListener('input', () => {
     addPersonButton.disabled = !personName.value.trim();
 });
@@ -26,9 +33,6 @@ personName.addEventListener('keypress', (event) => {
     }
 });
 
-//handle the Add People button
-addPersonButton.addEventListener('click', () => { addPerson(); });
-
 //handle the Delete buttons in the peopleList
 peopleList.addEventListener('click', (event) => {
     //check if the clicked element is a Remove button
@@ -42,7 +46,46 @@ peopleList.addEventListener('click', (event) => {
 });
 
 //handle the Add Item button
-addPersonButton.addEventListener('click', () => { addItem(); });
+addItemButton.addEventListener('click', () => {
+    //disable the add button
+    addItemButton.disabled = true;
+    //prepend the people list
+    itemList.innerHTML = `
+        <li class="list-group-item">
+            <div class="row align-items-center">
+                <div class="col-3 border-end pe-3">${itemName.value.trim()}</div>
+                <div class="col-3 border-end pe-3">${itemCost.value.trim()}</div>
+                <div class="col-4 border-end pe-3">${itemOwner.value.trim()}</div>
+                <div class="col-2 text-end">
+                    <button class="btn btn-sm btn-danger">Remove</button>
+                </div>
+            </div>
+        </li>`
+        + itemList.innerHTML;
+    //clear the input field,
+    itemName.value = '';
+    itemCost.value = '';
+    itemOwner.value = '';
+});
+
+//disable the Add Item button if any of the item fields are empty
+[itemName, itemCost, itemOwner].forEach((field) => {
+    field.addEventListener('input', () => {
+        addItemButton.disabled = !itemName.value.trim()
+            || !itemCost.value.trim()
+            || !itemOwner.value.trim();
+    });
+});
+
+//handle the Delete buttons in the itemList
+itemList.addEventListener('click', (event) => {
+    //check if the clicked element is a Remove button
+    if (event.target.textContent === 'Remove') {
+        //delete the item from the list
+        const li = event.target.closest('li');
+        if (li) li.remove();
+    }
+});
 
 /**
  * Prepend the people list with the new person
@@ -71,6 +114,12 @@ function updatePeople() {
     people.length = 0;
     //add each person's name to the people array
     [...peopleList.getElementsByTagName('li')].forEach((li) => {
-        people.push(li.firstChild.textContent.trim());
+        people.push(li.children[0].textContent);
     });
+    //update Select Person dropdown
+    itemOwner.innerHTML = '<option value="" disabled selected>Select person</option>';
+    people.forEach((person) => {
+        itemOwner.innerHTML += `<option value="${person}">${person}</option>`;
+    });
+    addItemButton.disabled = true;
 }

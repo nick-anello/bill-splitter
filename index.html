@@ -43,11 +43,17 @@
                             <input type="text" class="form-control" id="item-cost" placeholder="Cost">
                         </div>
                         <div class="col-3">
-                            <input type="text" class="form-control" id="item-owner" placeholder="Person">
+                            <select class="form-select" id="item-owner">
+                                <option value="" disabled selected>Select person</option>
+                            </select>
                         </div>
                         <div class="col-3">
                             <button type="button" class="btn btn-primary w-100" id="add-item" disabled>Add</button>
                         </div>
+                    </div>
+                    <!-- Item List -->
+                    <div>
+                        <ul class="list-group" id="item-list"></ul>
                     </div>
                 </div>
             </form>
