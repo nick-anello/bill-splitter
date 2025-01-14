@@ -17,7 +17,10 @@ const addPersonButton = document.getElementById('add-person'),
 
 //define globals
 let people = [],
-    cost = '';
+    items = [],
+    taxes = [],
+    cost = '',
+    tax = '';
 
 //handle the Add People button
 addPersonButton.addEventListener('click', () => { addPerson(); });
@@ -56,13 +59,18 @@ itemCost.addEventListener('keydown', (event) => {
         event.preventDefault();
         cost += key;
         if (cost === '0') cost = '';
-        displayCost();
+        displayNum(itemCost, cost);
     }
     else if (key === 'Backspace') {
         event.preventDefault();
         cost = cost.slice(0, -1);
-        displayCost();
+        displayNum(itemCost, cost);
     }
+    //enable/disable add item button
+    addItemButton.disabled = 
+        !itemName.value.trim()
+        || !cost
+        || !itemOwner.value.trim();
 });
 
 //handle the Add Item button
@@ -70,18 +78,23 @@ addItemButton.addEventListener('click', () => {
     //disable the add button
     addItemButton.disabled = true;
     //prepend the new item to the list
+    const nameVal = itemName.value.trim(),
+        costVal = itemCost.value.trim(),
+        ownerVal = itemOwner.value.trim();
     itemList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item">
             <div class="row align-items-center">
-                <div class="col-3 border-end pe-3">${itemName.value.trim()}</div>
-                <div class="col-3 border-end pe-3">${itemCost.value.trim()}</div>
-                <div class="col-4 border-end pe-3">${itemOwner.value.trim()}</div>
+                <div class="col-3 border-end pe-3">${nameVal}</div>
+                <div class="col-3 border-end pe-3">${costVal}</div>
+                <div class="col-4 border-end pe-3">${ownerVal}</div>
                 <div class="col-2 text-end">
                     <button class="btn btn-sm btn-danger">Remove</button>
                 </div>
             </div>
         </li>`
     );
+    //push item to item list
+    items.push({name: nameVal, cost: parseFloat(costVal.replace(/[$,]/g, '')), owner: ownerVal});
     //clear the input fields
     itemName.value = '';
     itemCost.value = '';
@@ -90,10 +103,11 @@ addItemButton.addEventListener('click', () => {
 });
 
 //disable the Add Item button if any of the item fields are empty
-[itemName, itemCost, itemOwner].forEach((field) => {
+[itemName, itemOwner].forEach((field) => {
     field.addEventListener('input', () => {
-        addItemButton.disabled = !itemName.value.trim()
-            || !itemCost.value.trim()
+        addItemButton.disabled = 
+            !itemName.value.trim()
+            || !cost
             || !itemOwner.value.trim();
     });
 });
@@ -104,13 +118,28 @@ itemList.addEventListener('click', (event) => {
     if (event.target.textContent === 'Remove') {
         //delete the item from the list
         const li = event.target.closest('li');
-        if (li) li.remove();
+        if (li) {
+            li.remove();
+        }
     }
 });
 
-//disable the Add Tax/Tip/Fee button if input field is blank
-taxCost.addEventListener('input', () => {
-    addTaxButton.disabled = !taxCost.value.trim();
+taxCost.addEventListener('keydown', (event) => {
+    event.preventDefault();
+    const key = event.key;
+    if (/[0-9]/.test(key)) {
+        event.preventDefault();
+        tax += key;
+        if (tax === '0') tax = '';
+        displayNum(taxCost, tax);
+    }
+    else if (key === 'Backspace') {
+        event.preventDefault();
+        tax = tax.slice(0, -1);
+        displayNum(taxCost, tax);
+    }
+    //enable/disable add item button
+    addTaxButton.disabled = !tax;
 });
 
 //handle the Add Tax/Tip/Fee button
@@ -118,14 +147,18 @@ addTaxButton.addEventListener('click', () => {
     //disable the add Tax/Tip/Fee button
     addTaxButton.disabled = true;
     //prepend the Tax/Tip/Fee list
+    const taxVal = taxCost.value.trim();
     taxList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item d-flex justify-content-between">
-            <span class="tax-cost">${taxCost.value.trim()}</span>
+            <span class="tax-cost">${taxVal}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
     );
+    //push the Tax/Tip/Fee to the taxes list
+    taxes.push(parseFloat(taxVal.replace(/[$,]/g, '')));
     //clear the input field,
     taxCost.value = '';
+    tax = '';
 });
 
 //handle the Delete buttons in the taxList
@@ -168,24 +201,24 @@ function updatePeople() {
         people.push(li.children[0].textContent);
     });
     //update Select Person dropdown
-    itemOwner.innerHTML = '<option value="" disabled selected>Select person</option>';
+    itemOwner.innerHTML = '<option value="" disabled selected>Person</option>';
     people.forEach((person) => {
         itemOwner.innerHTML += `<option value="${person}">${person}</option>`;
     });
     addItemButton.disabled = true;
 }
 
-function displayCost() {
-    const length = cost.length;
+function displayNum(elem, string) {
+    const length = string.length;
     //add zeros to the right of the decimal if necessary
     if (length <= 2) {
-        const decimal = '0'.repeat(2 - length) + cost;
-        itemCost.value = `$0.${decimal}`;
+        const decimal = '0'.repeat(2 - length) + string;
+        elem.value = `$0.${decimal}`;
     }
     else {
         //split into whole part and decimal part
-        const leftDecimal = cost.slice(0, length - 2),
-            rightDecimal = cost.slice(length - 2);
-        itemCost.value = `$${leftDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${rightDecimal}`;
+        const leftDecimal = string.slice(0, length - 2),
+            rightDecimal = string.slice(length - 2);
+        elem.value = `$${leftDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${rightDecimal}`;
     }
 }
