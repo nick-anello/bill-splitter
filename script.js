@@ -16,7 +16,8 @@ const addPersonButton = document.getElementById('add-person'),
     taxList = document.getElementById('tax-list');
 
 //define globals
-let people = [];
+let people = [],
+    cost = '';
 
 //handle the Add People button
 addPersonButton.addEventListener('click', () => { addPerson(); });
@@ -48,6 +49,22 @@ peopleList.addEventListener('click', (event) => {
     }
 });
 
+itemCost.addEventListener('keydown', (event) => {
+    event.preventDefault();
+    const key = event.key;
+    if (/[0-9]/.test(key)) {
+        event.preventDefault();
+        cost += key;
+        if (cost === '0') cost = '';
+        displayCost();
+    }
+    else if (key === 'Backspace') {
+        event.preventDefault();
+        cost = cost.slice(0, -1);
+        displayCost();
+    }
+});
+
 //handle the Add Item button
 addItemButton.addEventListener('click', () => {
     //disable the add button
@@ -69,6 +86,7 @@ addItemButton.addEventListener('click', () => {
     itemName.value = '';
     itemCost.value = '';
     itemOwner.value = '';
+    cost = '';
 });
 
 //disable the Add Item button if any of the item fields are empty
@@ -155,4 +173,19 @@ function updatePeople() {
         itemOwner.innerHTML += `<option value="${person}">${person}</option>`;
     });
     addItemButton.disabled = true;
+}
+
+function displayCost() {
+    const length = cost.length;
+    //add zeros to the right of the decimal if necessary
+    if (length <= 2) {
+        const decimal = '0'.repeat(2 - length) + cost;
+        itemCost.value = `$0.${decimal}`;
+    }
+    else {
+        //split into whole part and decimal part
+        const leftDecimal = cost.slice(0, length - 2),
+            rightDecimal = cost.slice(length - 2);
+        itemCost.value = `$${leftDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${rightDecimal}`;
+    }
 }
