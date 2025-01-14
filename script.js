@@ -52,8 +52,8 @@ peopleList.addEventListener('click', (event) => {
 addItemButton.addEventListener('click', () => {
     //disable the add button
     addItemButton.disabled = true;
-    //prepend the people list
-    itemList.innerHTML = `
+    //prepend the new item to the list
+    itemList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item">
             <div class="row align-items-center">
                 <div class="col-3 border-end pe-3">${itemName.value.trim()}</div>
@@ -64,8 +64,8 @@ addItemButton.addEventListener('click', () => {
                 </div>
             </div>
         </li>`
-        + itemList.innerHTML;
-    //clear the input field,
+    );
+    //clear the input fields
     itemName.value = '';
     itemCost.value = '';
     itemOwner.value = '';
@@ -100,12 +100,12 @@ addTaxButton.addEventListener('click', () => {
     //disable the add Tax/Tip/Fee button
     addTaxButton.disabled = true;
     //prepend the Tax/Tip/Fee list
-    taxList.innerHTML = `
+    taxList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item d-flex justify-content-between">
             <span class="tax-cost">${taxCost.value.trim()}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
-        + taxList.innerHTML;
+    );
     //clear the input field,
     taxCost.value = '';
 });
@@ -127,12 +127,12 @@ function addPerson() {
     //disable the add button
     addPersonButton.disabled = true;
     //prepend the people list
-    peopleList.innerHTML = `
+    peopleList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item d-flex justify-content-between">
             <span class="person-name">${personName.value.trim()}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
-        + peopleList.innerHTML;
+    );
     //clear the input field,
     personName.value = '';
     //update people array
