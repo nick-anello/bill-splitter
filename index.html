@@ -14,10 +14,10 @@
         </header>
         <main>
             <form>
-                <!-- Add People section -->
+                <!-- People section -->
                 <div class="mb-5">
                     <h3>Add People</h3>
-                    <!-- Add Person row -->
+                    <!-- Person row -->
                     <div class="mb-4 row g-2">
                         <div class="col-9">
                             <input type="text" class="form-control" id="person-name" placeholder="Name">
@@ -31,20 +31,20 @@
                         <ul class="list-group" id="people-list"></ul>
                     </div>
                 </div>
-                <!-- Add Item section -->
-                <div class="mb-4">
+                <!-- Item section -->
+                <div class="mb-5">
                     <h3>Add Items</h3>
-                    <!-- Add Item row -->
+                    <!-- Item row -->
                     <div class="mb-4 row g-2">
                         <div class="col-3">
-                            <input type="text" class="form-control" id="item-name" placeholder="Item name">
+                            <input type="text" class="form-control" id="item-name" placeholder="Item">
                         </div>
                         <div class="col-3">
                             <input type="text" class="form-control" id="item-cost" placeholder="Cost">
                         </div>
                         <div class="col-3">
                             <select class="form-select" id="item-owner">
-                                <option value="" disabled selected>Select person</option>
+                                <option value="" disabled selected>Person</option>
                             </select>
                         </div>
                         <div class="col-3">
@@ -54,6 +54,24 @@
                     <!-- Item List -->
                     <div>
                         <ul class="list-group" id="item-list"></ul>
+                    </div>
+                </div>
+                <!-- Item section -->
+                <div class="mb-5">
+                    <h3>Add Tax, Tip, and Fees</h3>
+                    <p>Add in order as they appear on your receipt</p>
+                    <!-- Tax/Tip/Fee row -->
+                    <div class="mb-4 row g-2">
+                        <div class="col-9">
+                            <input type="text" class="form-control" id="tax-cost" placeholder="Tax, Tip, or Fee">
+                        </div>
+                        <div class="col-3">
+                            <button type="button" class="btn btn-primary w-100" id="add-tax" disabled>Add</button>
+                        </div>
+                    </div>
+                    <!-- Tax List -->
+                    <div>
+                        <ul class="list-group" id="tax-list"></ul>
                     </div>
                 </div>
             </form>

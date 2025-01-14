@@ -10,7 +10,10 @@ const addPersonButton = document.getElementById('add-person'),
     itemName = document.getElementById('item-name'),
     itemCost = document.getElementById('item-cost'),
     itemOwner = document.getElementById('item-owner'),
-    itemList = document.getElementById('item-list');
+    itemList = document.getElementById('item-list'),
+    addTaxButton = document.getElementById('add-tax'),
+    taxCost = document.getElementById('tax-cost'),
+    taxList = document.getElementById('tax-list');
 
 //define globals
 let people = [];
@@ -82,6 +85,36 @@ itemList.addEventListener('click', (event) => {
     //check if the clicked element is a Remove button
     if (event.target.textContent === 'Remove') {
         //delete the item from the list
+        const li = event.target.closest('li');
+        if (li) li.remove();
+    }
+});
+
+//disable the Add Tax/Tip/Fee button if input field is blank
+taxCost.addEventListener('input', () => {
+    addTaxButton.disabled = !taxCost.value.trim();
+});
+
+//handle the Add Tax/Tip/Fee button
+addTaxButton.addEventListener('click', () => {
+    //disable the add Tax/Tip/Fee button
+    addTaxButton.disabled = true;
+    //prepend the Tax/Tip/Fee list
+    taxList.innerHTML = `
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="tax-cost">${taxCost.value.trim()}</span>
+            <button class="btn btn-sm btn-danger">Remove</button>
+        </li>`
+        + taxList.innerHTML;
+    //clear the input field,
+    taxCost.value = '';
+});
+
+//handle the Delete buttons in the taxList
+taxList.addEventListener('click', (event) => {
+    //check if the clicked element is a Remove button
+    if (event.target.textContent === 'Remove') {
+        //delete the Tax/Tip/Fee from the list
         const li = event.target.closest('li');
         if (li) li.remove();
     }

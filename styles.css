@@ -9,3 +9,7 @@
     overflow: hidden;           /* Hide overflowed text */
     text-overflow: ellipsis;    /* Add ellipsis for overflowed text */
 }
+
+p {
+    color: #6c757d;
+}
