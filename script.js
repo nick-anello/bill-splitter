@@ -58,9 +58,11 @@ itemCost.addEventListener('keydown', (event) => {
     const key = event.key;
     if (/[0-9]/.test(key)) {
         event.preventDefault();
-        cost += key;
-        if (cost === '0') cost = '';
-        displayNum(itemCost, cost);
+        if (cost.length < 9) {
+            cost += key;
+            if (cost === '0') cost = '';
+            displayNum(itemCost, cost);
+        }
     }
     else if (key === 'Backspace') {
         event.preventDefault();
@@ -85,10 +87,10 @@ addItemButton.addEventListener('click', () => {
     itemList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item">
             <div class="row align-items-center">
-                <div class="col-3 border-end pe-3">${nameVal}</div>
-                <div class="col-3 border-end pe-3">${costVal}</div>
-                <div class="col-4 border-end pe-3">${ownerVal}</div>
-                <div class="col-2 text-end">
+                <div class="col-3 border-end pe-3 text-truncate">${nameVal}</div>
+                <div class="col-3 border-end pe-3 text-truncate">${costVal}</div>
+                <div class="col-3 border-end pe-3 text-truncate">${ownerVal}</div>
+                <div class="col-3 text-end">
                     <button class="btn btn-sm btn-danger">Remove</button>
                 </div>
             </div>
@@ -124,6 +126,7 @@ itemList.addEventListener('click', (event) => {
         if (li) {
             li.remove();
         }
+
     }
 });
 
@@ -132,9 +135,11 @@ taxCost.addEventListener('keydown', (event) => {
     const key = event.key;
     if (/[0-9]/.test(key)) {
         event.preventDefault();
-        tax += key;
-        if (tax === '0') tax = '';
-        displayNum(taxCost, tax);
+        if (tax.length < 9) {
+            tax += key;
+            if (tax === '0') tax = '';
+            displayNum(taxCost, tax);
+        }
     }
     else if (key === 'Backspace') {
         event.preventDefault();
@@ -153,7 +158,7 @@ addTaxButton.addEventListener('click', () => {
     const taxVal = taxCost.value.trim();
     taxList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item d-flex justify-content-between">
-            <span class="tax-cost">${taxVal}</span>
+            <span class="tax-cost text-truncate">${taxVal}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
     );
@@ -185,7 +190,7 @@ function addPerson() {
     //prepend the people list
     peopleList.insertAdjacentHTML('afterbegin', `
         <li class="list-group-item d-flex justify-content-between">
-            <span class="person-name">${personName.value.trim()}</span>
+            <span class="person-name text-truncate">${personName.value.trim()}</span>
             <button class="btn btn-sm btn-danger">Remove</button>
         </li>`
     );
@@ -247,7 +252,7 @@ function calculate() {
         totalsList.insertAdjacentHTML('afterbegin', `
             <li class="list-group-item">
                 <div class="row align-items-center">
-                    <div class="col-9 border-end pe-3">${person}</div>
+                    <div class="col-9 border-end pe-3 text-truncate">${person}</div>
                     <div class="col-3 text-end pe-3">$${totals[person].toFixed(2)}</div>
                 </div>
             </li>`
