@@ -13,7 +13,8 @@ const addPersonButton = document.getElementById('add-person'),
     itemList = document.getElementById('item-list'),
     addTaxButton = document.getElementById('add-tax'),
     taxCost = document.getElementById('tax-cost'),
-    taxList = document.getElementById('tax-list');
+    taxList = document.getElementById('tax-list'),
+    totalsList = document.getElementById('totals-list');
 
 //define globals
 let people = [],
@@ -100,6 +101,8 @@ addItemButton.addEventListener('click', () => {
     itemCost.value = '';
     itemOwner.value = '';
     cost = '';
+    //update totals
+    calculate();
 });
 
 //disable the Add Item button if any of the item fields are empty
@@ -159,6 +162,8 @@ addTaxButton.addEventListener('click', () => {
     //clear the input field,
     taxCost.value = '';
     tax = '';
+    //update totals
+    calculate();
 });
 
 //handle the Delete buttons in the taxList
@@ -220,5 +225,32 @@ function displayNum(elem, string) {
         const leftDecimal = string.slice(0, length - 2),
             rightDecimal = string.slice(length - 2);
         elem.value = `$${leftDecimal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${rightDecimal}`;
+    }
+}
+
+function calculate() {
+    const totals = {};
+    let total = 0;
+    items.forEach((item) => {
+        if (!totals[item.owner]) totals[item.owner] = 0;
+        totals[item.owner] += item.cost;
+        total += item.cost;
+    });
+    taxes.forEach((tax) => {
+        const taxPercent = tax/total;
+        for (const person in totals) {
+            totals[person] += totals[person]*taxPercent;
+        }
+    });
+    totalsList.replaceChildren();
+    for (const person in totals) {
+        totalsList.insertAdjacentHTML('afterbegin', `
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-9 border-end pe-3">${person}</div>
+                    <div class="col-3 text-end pe-3">$${totals[person].toFixed(2)}</div>
+                </div>
+            </li>`
+        );
     }
 }
