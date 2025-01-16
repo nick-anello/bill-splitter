@@ -43,9 +43,20 @@ const state = {
 // ==============================
 // Define functions to handle user interactions
 
+/**
+ * Handle input for the add person field
+ */
+function handlePersonInput(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        if (personInput.value.trim()) addPerson();
+    }
+}
+
 // ==============================
 // Section 6: Initialization
 // ==============================
 // Set up event listeners and perform any setup tasks
+personInput.addEventListener('keydown', (event) => { handlePersonInput(event); });
 
 // Call the init function to start the app
