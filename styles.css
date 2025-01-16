@@ -2,14 +2,6 @@
     max-width: 720px;
 }
 
-.person-name {
-    display: inline-block;      /* Make it behave like a block-level element */
-    max-width: calc(100% - 50px); /* Ensure space for the button */
-    white-space: nowrap;        /* Prevent wrapping */
-    overflow: hidden;           /* Hide overflowed text */
-    text-overflow: ellipsis;    /* Add ellipsis for overflowed text */
-}
-
 p {
     color: #6c757d;
 }
