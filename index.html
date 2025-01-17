@@ -17,10 +17,10 @@
                 <h3>Add People</h3>
                 <div class="mb-4 row g-2">
                     <div class="col-9">
-                        <input type="text" class="form-control" id="person-input" placeholder="Name">
+                        <input type="text" class="form-control" placeholder="Name">
                     </div>
                     <div class="col-3">
-                        <button type="button" class="btn btn-primary w-100" id="add-person-button" data-action="add" data-list="people" disabled>Add</button>
+                        <button type="button" class="btn btn-primary w-100" data-action="add" data-list="people" disabled>Add</button>
                     </div>
                 </div>
                 <div>
@@ -31,10 +31,10 @@
                 <h3>Add Items</h3>
                 <div class="mb-4 row g-2">
                     <div class="col-3">
-                        <input type="text" class="form-control" id="item-name-input" placeholder="Item">
+                        <input type="text" class="form-control" placeholder="Item">
                     </div>
                     <div class="col-3">
-                        <input type="text" inputmode="decimal" class="form-control" id="item-cost-input" placeholder="$0.00">
+                        <input type="text" inputmode="decimal" class="form-control" placeholder="$0.00">
                     </div>
                     <div class="col-3">
                         <select class="form-select" id="item-owner-input">
@@ -54,20 +54,20 @@
                 <p>Add in order as they appear on your receipt</p>
                 <div class="mb-4 row g-2">
                     <div class="col-9">
-                        <input type="text" class="form-control" id="charge-input" placeholder="$0.00">
+                        <input type="text" class="form-control" placeholder="$0.00">
                     </div>
                     <div class="col-3">
-                        <button type="button" class="btn btn-primary w-100" id="add-tax-button" disabled>Add</button>
+                        <button type="button" class="btn btn-primary w-100" data-action="add" data-list="charges" disabled>Add</button>
                     </div>
                 </div>
                 <div>
-                    <ul class="list-group" id="charge-list"></ul>
+                    <ul class="list-group" id="charges"></ul>
                 </div>
             </div>
             <div class="mb-5">
                 <h3>Totals</h3>
                 <div>
-                    <ul class="list-group" id="charges"></ul>
+                    <ul class="list-group"></ul>
                 </div>
             </div>
         </main>
