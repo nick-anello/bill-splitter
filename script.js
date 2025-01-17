@@ -25,6 +25,7 @@ document.querySelectorAll('input[inputmode="decimal"]').forEach(input => input.a
 function handleClick(event) {
     const target = event.target,
         dataset = target.dataset;
+
     switch (dataset.action) {
         case 'add': addToList(target); break;
         case 'delete': deleteFromList(dataset.list, dataset.index); break;
@@ -40,12 +41,7 @@ function handleClick(event) {
  * @returns {void}
  */
 function handleInput(event) {
-    const target = event.target,
-        row = target.closest('.row');
-    if (row) {
-        row.querySelector('button').disabled = 
-            [...row.querySelectorAll('input, select')].some(element => !element.value.trim());
-    }
+    setButtonState(event.target);
 }
 
 /**
@@ -58,17 +54,23 @@ function handleInput(event) {
 function handleDecimalTextKeydown(event) {
     event.preventDefault();
     const key = event.key,
-        target = key.target,
-        list = target.dataset.list,
-        inputString = moneyInputs[list];
+        target = event.target,
+        list = target.dataset.list;
+
+    if(!state.moneyInputs[list]) state.moneyInputs[list] = '';
+    let moneyInput = state.moneyInputs[list];
+
     if (/[0-9]/.test(key)) {
-        inputString += key;
-        if (inputString === 0) inputString = '';
+        moneyInput += key;
+        if (moneyInput === '0') moneyInput = '';
     }
     else if (key === 'Backspace') {
-        inputString = inputString.slice(0, -1);
+        moneyInput = moneyInput.slice(0, -1);
     }
-    renderMoney(target);
+    
+    state.moneyInputs[list] = moneyInput;
+    renderMoneyInput(target);
+    setButtonState(target);
 }
 
 /**
@@ -87,6 +89,7 @@ function addToList(target) {
         data.push(field.value.trim());
         field.value = '';
     });
+
     state[list].unshift(data.length === 1 ? data[0] : data);
     renderList(list);
 }
@@ -101,6 +104,13 @@ function addToList(target) {
 function deleteFromList(list, index) {
     state[list].splice(index, 1);
     renderList(list);
+}
+
+function setButtonState(target) {
+    const row = target.closest('.row');
+
+    row.querySelector('button').disabled = 
+        [...row.querySelectorAll('input, select')].some(element => !element.value.trim());
 }
 
 /**
@@ -162,6 +172,14 @@ function renderItemsList() {
  * @param {HTMLElement} target - Money input field.
  * @returns {void}
  */
-function renderMoney(target) {
+function renderMoneyInput(target) {
+    const moneyInput = state.moneyInputs[target.dataset.list],
+        length = moneyInput.length;
+    let displayString;
     
+    target.value = !length 
+        ? ''
+        : length < 3
+            ? `$0.${'0'.repeat(2 - length) + moneyInput}`
+            : `$${moneyInput.slice(0, length - 2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${moneyInput.slice(length - 2)}`;
 }
