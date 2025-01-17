@@ -69,6 +69,7 @@ function renderList(list) {
  * @returns {void}
  */
 function addToList(target) {
+    target.disabled = true;
     const list = target.dataset.list,
         fields = target.closest('.row').querySelectorAll('input, select'),
         data = [];
