@@ -34,7 +34,7 @@
                         <input type="text" class="form-control" placeholder="Item">
                     </div>
                     <div class="col-3">
-                        <input type="text" inputmode="decimal" class="form-control" placeholder="$0.00">
+                        <input type="text" inputmode="decimal" class="form-control" placeholder="$0.00" data-list="items" >
                     </div>
                     <div class="col-3">
                         <select class="form-select" id="item-owner-input">
@@ -42,7 +42,7 @@
                         </select>
                     </div>
                     <div class="col-3">
-                        <button type="button" class="btn btn-primary w-100" id="add-item-button" disabled>Add</button>
+                        <button type="button" class="btn btn-primary w-100" data-action="add" data-list="items" disabled>Add</button>
                     </div>
                 </div>
                 <div>
@@ -54,7 +54,7 @@
                 <p>Add in order as they appear on your receipt</p>
                 <div class="mb-4 row g-2">
                     <div class="col-9">
-                        <input type="text" class="form-control" placeholder="$0.00">
+                        <input type="text" inputmode="decimal" class="form-control" placeholder="$0.00" data-list="charges">
                     </div>
                     <div class="col-3">
                         <button type="button" class="btn btn-primary w-100" data-action="add" data-list="charges" disabled>Add</button>
