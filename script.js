@@ -29,7 +29,6 @@ function handleClick(event) {
     switch (dataset.action) {
         case 'add': addToList(target); break;
         case 'delete': deleteFromList(dataset.list, dataset.index); break;
-        default:
     }
 }
 
@@ -88,6 +87,7 @@ function addToList(target) {
     fields.forEach(field => {
         data.push(field.value.trim());
         field.value = '';
+        if (field.inputMode === 'decimal') state.moneyInputs[list] = '';
     });
 
     state[list].unshift(data.length === 1 ? data[0] : data);
@@ -106,6 +106,12 @@ function deleteFromList(list, index) {
     renderList(list);
 }
 
+/**
+ * Enables or disables a button.
+ * 
+ * @param {HTMLElement} target - Button to enable or disable
+ * @returns {void}
+ */
 function setButtonState(target) {
     const row = target.closest('.row');
 
@@ -122,6 +128,7 @@ function setButtonState(target) {
 function renderList(list) {
     switch (list) {
         case 'people': 
+            renderSelectOptions();
         case 'charges':
             renderSingleFieldList(list);
             break;
@@ -129,6 +136,7 @@ function renderList(list) {
             renderItemsList();
             break;
     }
+    renderTotals();
 }
 
 /**
@@ -182,4 +190,49 @@ function renderMoneyInput(target) {
         : length < 3
             ? `$0.${'0'.repeat(2 - length) + moneyInput}`
             : `$${moneyInput.slice(0, length - 2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${moneyInput.slice(length - 2)}`;
+}
+
+/**
+ * Renders the options for the item owner dropdown.
+ * 
+ * @returns {void}
+ */
+function renderSelectOptions() {
+    const selectElement = document.getElementById('item-owner-input')
+    selectElement.innerHTML = '<option value="" disabled selected>Person</option>';
+    selectElement.innerHTML += state.people.map(person => `<option value="${person}">${person}</option>`);
+}
+
+/**
+ * Renders the totals list.
+ * 
+ * @returns {void}
+ */
+function renderTotals() {
+    let total = 0;
+    const totals = {};
+
+    state.items.forEach(item => {
+        const value = parseFloat(item[1].replace(/[\$,]/g, '')),
+            owner = item[2];
+        total += value;
+        totals[owner] = (totals[owner] ?? 0) + value;
+    });
+    state.charges.forEach(charge => {
+        const value = parseFloat(charge.replace(/[\$,]/g, '')),
+            percent = value / total;
+        total += value;
+        Object.keys(totals).forEach(key => {
+            totals[key] += totals[key] * percent;
+        });
+    });
+
+    document.getElementById('totals').innerHTML = Object.keys(totals).map(key => `
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-9 border-end pe-3 text-truncate">${key}</div>
+                    <div class="col-3 text-end pe-3 text-truncate">$${totals[key].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+                </div>
+            </li>`
+    ).join('');
 }
